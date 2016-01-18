@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by Justin on 2015-11-02.
@@ -23,21 +25,23 @@ public class Character implements ApplicationListener {
     SpriteBatch batch;
     TextureAtlas taBomberman;
     Sprite[] spBomberman;
-    int i = 0, nCurrentIndex;
+    static int i = 0, nCurrentIndex;
     Animation animFront, animBack, animRight, animLeft;
-    float stateTime, fCharacterVelocityX = 0, fCharacterVelocityY = 0, fCharacterX, fCharacterY, fCharacterWidth, fOldX, fOldY;
+    static float stateTime, fCharacterVelocityX = 0, fCharacterVelocityY = 0, fCharacterX, fCharacterY, fCharacterWidth, fOldX, fOldY;
     int nVelocityX, nVelocityY;
     TextureRegion currentFrame;
     TextureRegion[] atrFront, atrBack, atrLeft, atrRight;
     boolean[] arbDirection = new boolean[4];//0=up, 1=down, 2=right, 3=left
     boolean bStop = true, bCollidedX, bItemHit = false;
-    Sprite sprChar;
+    static Sprite sprChar;
     int nSHeight, nSWidth, nLayerCount, nC = 0;
     float fTileWidth, fTileHeight;
     Map map;
     HitTest hitTest;
     ItemSpawner itemSpawner;
     HUD hud;
+    static TextureAtlas taBombExplode;
+    static ArrayList<Bomb> arlBombs;
 
    /* public void setMap(Map _map) {
         map=_map;
@@ -104,6 +108,10 @@ public class Character implements ApplicationListener {
         stateTime = 0f;
         sprChar = new Sprite(atrRight[0]);
         hitTest = new HitTest();
+
+        //Load file for bomb animation and create an array list for bombs
+        taBombExplode = new TextureAtlas(Gdx.files.internal("BombExploding/BombExploding.atlas"));
+        arlBombs = new ArrayList<Bomb>();
     }
 
     @Override
@@ -111,6 +119,10 @@ public class Character implements ApplicationListener {
 
     }
 
+    //Add sprites using a button: https://github.com/MatthewBrock/TheDeepDarkTaurock/tree/FireBallScratch/core/src/taurockdeepdark
+    public static void makeBomb() {
+        arlBombs.add(new Bomb(taBombExplode, fCharacterX, fCharacterY, nCurrentIndex, sprChar));
+    }
 
     public void setCharacterVelocity(int _nVx, int _nVy) {
         fCharacterVelocityX = nVelocityX * _nVx;
@@ -304,6 +316,15 @@ s
         batch.begin();
         batch.draw(sprChar, fCharacterX, fCharacterY);
         batch.end();
+
+        //Render each bomb in the array list
+        for (int i = 0; i < arlBombs.size(); i++) {
+            arlBombs.get(i).render();
+            if (arlBombs.get(i).isExploded) {    //Remove bomb once animation ends
+                arlBombs.remove(i);
+                System.out.println("Bomb removed");
+            }
+        }
     }
 
     /* public void updateCharacter(float fX, float fY, float fCharWidth, float fCharHeight) {

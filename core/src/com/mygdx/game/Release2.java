@@ -3,14 +3,16 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
-public class Release2 implements Screen {
+public class Release2 extends Stage implements Screen {
     Map map;
     Thumbstick thumbstick;
     Character character;
     ScreenHandler screenHandler;
     HUD hud;
     ItemSpawner itemSpawner;
+    BombButton btnBomb;
 
     public Release2(ScreenHandler _screenHandler) {
         this.screenHandler = _screenHandler;
@@ -31,15 +33,16 @@ public class Release2 implements Screen {
         character.create();
         thumbstick.setCharacter(character, character.arbDirection, character.bStop);
 
-
-
-
+        btnBomb = new BombButton();
+        this.addActor(btnBomb.ibBombDrop);
+        this.addActor(thumbstick.touchpad);
     }
 
 
     @Override
     public void show() {
         this.create();
+        Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -51,6 +54,8 @@ public class Release2 implements Screen {
         character.render();
         hud.render();
         itemSpawner.render();
+        this.act(Gdx.graphics.getDeltaTime());
+        this.draw();
     }
 
     @Override

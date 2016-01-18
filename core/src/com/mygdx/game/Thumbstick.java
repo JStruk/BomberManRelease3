@@ -29,9 +29,7 @@ public class Thumbstick implements ApplicationListener {
         bStop = _bStop;
     }
 
-    @Override
-    public void create() {
-        float aspectRatio = (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
+    public Thumbstick() {
         //Create a skin for the touchpad
         skTouchPad = new Skin();
         //Set background and knob imgs
@@ -58,15 +56,17 @@ public class Thumbstick implements ApplicationListener {
         stage.addActor(touchpad);
         Gdx.input.setInputProcessor(stage);
         fTouchPadHeight = sprFG.getHeight()*2;
-        //create our crappy rect that is going to move around with the touchpad
-        //  sprRect.setPosition(Gdx.graphics.getWidth()/2-sprRect.getWidth()/2, Gdx.graphics.getHeight()/2-sprRect.getHeight()/2);
+    }
+
+    @Override
+    public void create() {
+
     }
 
     @Override
     public void resize(int width, int height) {
 
     }
-
 
     @Override
     public void render() {
