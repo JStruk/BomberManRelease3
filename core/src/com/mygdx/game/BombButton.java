@@ -29,7 +29,7 @@ public class BombButton extends Actor {
         ibsBombDrop.checked = skBombDrop.getDrawable("bombbtnON");
         ibBombDrop = new ImageButton(ibsBombDrop);
         ibBombDrop.setSize(120, 120);
-        ibBombDrop.setPosition(Gdx.graphics.getWidth() - (ibBombDrop.getWidth() + 30), 30);
+        ibBombDrop.setPosition(Gdx.graphics.getWidth() - (ibBombDrop.getWidth() + 30), 0);
         ibBombDrop.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

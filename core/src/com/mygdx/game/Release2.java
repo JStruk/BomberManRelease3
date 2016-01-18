@@ -13,6 +13,7 @@ public class Release2 extends Stage implements Screen {
     HUD hud;
     ItemSpawner itemSpawner;
     BombButton btnBomb;
+    GetTileID getTileID;
 
     public Release2(ScreenHandler _screenHandler) {
         this.screenHandler = _screenHandler;
@@ -24,12 +25,13 @@ public class Release2 extends Stage implements Screen {
         thumbstick.create();
         map.ThumbstickHeight(thumbstick.fTouchPadHeight);
         map.create();
+        getTileID = new GetTileID(map);
         hud = new HUD();
         hud.create();
-        itemSpawner = new ItemSpawner();
+        itemSpawner = new ItemSpawner(getTileID);
         itemSpawner.create();
         character = new Character();
-        character.setMap(map, map.nYTiles, itemSpawner, hud);
+        character.setMap(map, map.nYTiles, itemSpawner, hud, getTileID);
         character.create();
         thumbstick.setCharacter(character, character.arbDirection, character.bStop);
 
@@ -51,9 +53,10 @@ public class Release2 extends Stage implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         map.render();
         thumbstick.render();
+        itemSpawner.render();
         character.render();
         hud.render();
-        itemSpawner.render();
+
         this.act(Gdx.graphics.getDeltaTime());
         this.draw();
     }
