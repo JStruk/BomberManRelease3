@@ -9,6 +9,8 @@ public class Release2 implements Screen {
     Thumbstick thumbstick;
     Character character;
     ScreenHandler screenHandler;
+    HUD hud;
+    ItemSpawner itemSpawner;
 
     public Release2(ScreenHandler _screenHandler) {
         this.screenHandler = _screenHandler;
@@ -20,10 +22,18 @@ public class Release2 implements Screen {
         thumbstick.create();
         map.ThumbstickHeight(thumbstick.fTouchPadHeight);
         map.create();
+        hud = new HUD();
+        hud.create();
+        itemSpawner = new ItemSpawner();
+        itemSpawner.create();
         character = new Character();
-        character.setMap(map, map.nYTiles);
+        character.setMap(map, map.nYTiles, itemSpawner, hud);
         character.create();
         thumbstick.setCharacter(character, character.arbDirection, character.bStop);
+
+
+
+
     }
 
 
@@ -39,6 +49,8 @@ public class Release2 implements Screen {
         map.render();
         thumbstick.render();
         character.render();
+        hud.render();
+        itemSpawner.render();
     }
 
     @Override

@@ -30,23 +30,29 @@ public class Character implements ApplicationListener {
     TextureRegion currentFrame;
     TextureRegion[] atrFront, atrBack, atrLeft, atrRight;
     boolean[] arbDirection = new boolean[4];//0=up, 1=down, 2=right, 3=left
-    boolean bStop = true, bCollidedX;
+    boolean bStop = true, bCollidedX, bItemHit = false;
     Sprite sprChar;
-    int nSHeight, nSWidth, nLayerCount, nC=0;
+    int nSHeight, nSWidth, nLayerCount, nC = 0;
     float fTileWidth, fTileHeight;
     Map map;
+    HitTest hitTest;
+    ItemSpawner itemSpawner;
+    HUD hud;
 
    /* public void setMap(Map _map) {
         map=_map;
     }*/
 
 
-        public void setMap(Map _map, int _nYtiles) {
+    public void setMap(Map _map, int _nYtiles, ItemSpawner spawner, HUD _hud) {
         nYtiles = _nYtiles;
         map = _map;
+        itemSpawner = spawner;
+        hud = _hud;
     }
 
     public void create() {
+
 //        collisionObjects = map.tiledMap.getLayers().get("CollisionLayer").getObjects();
         // cam = map.getCam();
         nSHeight = Gdx.graphics.getHeight(); //use to make scaling
@@ -97,6 +103,7 @@ public class Character implements ApplicationListener {
         animRight = new Animation(0.15f, atrRight);
         stateTime = 0f;
         sprChar = new Sprite(atrRight[0]);
+        hitTest = new HitTest();
     }
 
     @Override
@@ -163,6 +170,8 @@ public class Character implements ApplicationListener {
 
 
     public void render() {
+
+        // bItemHit = false;
       /*  for (int i = 0; i < collisionObjects.getCount(); i++) {
             RectangleMapObject obj = (RectangleMapObject) collisionObjects.get(i);
             Rectangle rect = obj.getRectangle();
@@ -191,8 +200,8 @@ public class Character implements ApplicationListener {
         bCollidedY = false;
         //Gdx.gl.glClearColor(0, 0, 0, 1);
         // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-      //  fCharacterX += fCharacterVelocityX / 2;
-       // fCharacterY += fCharacterVelocityY / 2;
+        //  fCharacterX += fCharacterVelocityX / 2;
+        // fCharacterY += fCharacterVelocityY / 2;
         // (int) ((fCharacterY+sprChar.getHeight()/2)/nTileHeight)
        /*if (map.collisionLayer.getCell((int) (fCharacterX / nTileWidth), ((int) (16 - ((fCharacterY + sprChar.getHeight() / 2) / nTileHeight)))) != null) {//leftcollision
             bCollidedX = map.collisionLayer.getCell((int) (fCharacterX / nTileWidth), ((int) (16 -(fCharacterY + sprChar.getHeight() / 2) / nTileHeight))).getTile().getProperties().containsKey("Block");
@@ -220,12 +229,15 @@ s
         fCharacterX += fCharacterVelocityX / 2;
         fCharacterY += fCharacterVelocityY / 2;
         sID = getTileID(fCharacterX, fCharacterY, nCharacterWidth);
+        //  hitTest.sprites(sprChar, itemSpawner.banana);
+
+
         if (sID.equalsIgnoreCase("block")) {
             fCharacterX = fOldX;
             fCharacterY = fOldY;
         }
-        System.out.println(sID);
-        if (nC % 15 == 0) {
+        // System.out.println(sID);
+        if (nC % 60 == 0) {
             System.out.println("X: " + (int) fCharacterX / nTileWidth + " Y: " + (int) (nYtiles - (fCharacterY / nTileHeight)));
         }
         //  updateCharacter(fCharacterX, fCharacterY, sprChar.getWidth(), sprChar.getHeight());
@@ -240,7 +252,6 @@ s
     /*    batch.begin();
         batch.draw(sprChar, fCharacterX, fCharacterY);
         batch.end();*/
-
         stateTime += Gdx.graphics.getDeltaTime();
         for (int i = 0; i < 4; i++) {//set all direction booleans to false unless it's the current direction
             if (nCurrentIndex == i) {
@@ -274,8 +285,21 @@ s
                 currentFrame = animRight.getKeyFrame(stateTime, true);
             }
         }
-
+        int nCharX = (int) fCharacterX;
+        int nCharY = (int) fCharacterY;
         sprChar = new Sprite(currentFrame);//Create the sprite of the character based on the current texture region frame
+        sprChar.setX(nCharX);
+        sprChar.setY(nCharY);
+        bItemHit = hitTest.bHit(sprChar, itemSpawner.banana);
+        if (nC % 30 == 0) {
+            System.out.println(bItemHit);
+            System.out.println("s x: " + sprChar.getX() + " " + itemSpawner.banana.getX());
+
+        }
+        if (bItemHit) {
+            hud.nScore++;
+            bItemHit = false;
+        }
 
         batch.begin();
         batch.draw(sprChar, fCharacterX, fCharacterY);
