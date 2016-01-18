@@ -7,6 +7,11 @@
     <property name="Block" value="5"/>
    </properties>
   </tile>
+  <tile id="3">
+   <properties>
+    <property name="spawnable" value="6"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="Layer1" width="23" height="17">
   <data encoding="base64" compression="zlib">

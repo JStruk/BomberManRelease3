@@ -31,11 +31,13 @@ public class ItemSpawner {
       //  banana.setBounds(150, 150, 25, 25);
         arBananas.add(banana);
         String sID = getTileID.getID(randnumX, randnumY,(int) arBananas.get(0).getWidth(), arBananas.get(0));
-        if(!sID.equalsIgnoreCase("block")|| !sID.equalsIgnoreCase("")) {
+       // if(!sID.equalsIgnoreCase("block")|| !sID.equalsIgnoreCase("")) {
+        if(sID.equalsIgnoreCase("spawnable")) {
             banana.setBounds(randnumX, randnumY, 25, 25);
-        }else{
-            createBanana();
         }
+      /*  }else{
+            createBanana();
+        }*/
     }
 
     public void render() {
